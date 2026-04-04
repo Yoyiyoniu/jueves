@@ -42,6 +42,76 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  /// Maneja el cierre de sesión
+  Future<void> _handleSignOut() async {
+    try {
+      // El AuthWrapper en main.dart detectará el cambio y navegará al login
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cerrar sesión: ${e.toString()}'),
+            backgroundColor: NothingTheme.interactive,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Muestra un diálogo de confirmación antes de cerrar sesión
+  Future<void> _confirmSignOut() async {
+    final shouldSignOut = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: NothingTheme.black,
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(color: NothingTheme.borderVisible, width: 1),
+        ),
+        title: Text(
+          '¿Cerrar sesión?',
+          style: NothingTheme.spaceMonoLabel(
+            fontSize: NothingTheme.body,
+            color: NothingTheme.textDisplay,
+          ),
+        ),
+        content: Text(
+          'Tendrás que volver a iniciar sesión con Google',
+          style: NothingTheme.spaceMonoLabel(
+            fontSize: NothingTheme.caption,
+            color: NothingTheme.textSecondary,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(
+              'CANCELAR',
+              style: NothingTheme.spaceMonoLabel(
+                fontSize: NothingTheme.caption,
+                color: NothingTheme.textSecondary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(
+              'CERRAR SESIÓN',
+              style: NothingTheme.spaceMonoLabel(
+                fontSize: NothingTheme.caption,
+                color: NothingTheme.interactive,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldSignOut == true) {
+      await _handleSignOut();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +124,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             color: NothingTheme.textSecondary,
           ),
         ),
+        actions: [],
       ),
       body: Stack(
         children: [
