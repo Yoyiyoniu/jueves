@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jueves/theme/nothing_theme.dart';
 import 'home_controller.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _controller = HomeController();
     _welcomeAnimCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 300),
     );
 
     _controller.addListener(() {
@@ -40,64 +41,100 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Jueves Clap (YAMNet)')),
+      backgroundColor: NothingTheme.black,
+      appBar: AppBar(
+        title: const Text(
+          '[ JUEVES ]',
+          style: TextStyle(
+            fontSize: NothingTheme.label,
+            letterSpacing: 0.88,
+            color: NothingTheme.textSecondary,
+          ),
+        ),
+      ),
       body: Stack(
         children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('👏', style: TextStyle(fontSize: 80)),
-                const SizedBox(height: 24),
-                _buildStatusBadge(),
-                const SizedBox(height: 40),
-                if (_controller.errorMessage != null) ...[
-                  _buildErrorMessage(_controller.errorMessage!),
-                  const SizedBox(height: 16),
-                ],
-                if (_controller.loading)
-                  const CircularProgressIndicator()
-                else
-                  FilledButton.icon(
-                    onPressed: _controller.toggle,
-                    icon: Icon(_controller.listening ? Icons.stop : Icons.mic),
-                    label: Text(_controller.listening ? 'Detener' : 'Iniciar'),
-                  ),
-              ],
+          // Dot grid background (subtle)
+          Positioned.fill(child: CustomPaint(painter: DotGridPainter())),
+
+          // Main content
+          SafeArea(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: NothingTheme.spaceLg,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('👏', style: TextStyle(fontSize: 96)),
+
+                    const SizedBox(height: NothingTheme.space3xl),
+
+                    _buildStatusIndicator(),
+
+                    const SizedBox(height: NothingTheme.space2xl),
+
+                    if (_controller.errorMessage != null) ...[
+                      _buildErrorMessage(),
+                      const SizedBox(height: NothingTheme.spaceLg),
+                    ],
+
+                    _buildControlButton(),
+                  ],
+                ),
+              ),
             ),
           ),
-          if (_controller.showWelcome) _buildWelcomeOverlay(theme),
+
+          // Welcome overlay
+          if (_controller.showWelcome) _buildWelcomeOverlay(),
         ],
       ),
     );
   }
 
-  Widget _buildStatusBadge() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+  Widget _buildStatusIndicator() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: NothingTheme.spaceMd,
+        vertical: NothingTheme.spaceSm,
+      ),
       decoration: BoxDecoration(
-        color: _controller.listening
-            ? Colors.green.withValues(alpha: 0.15)
-            : Colors.grey.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: _controller.listening
+              ? NothingTheme.accent
+              : NothingTheme.borderVisible,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            _controller.listening ? Icons.graphic_eq : Icons.mic_off,
-            size: 16,
-            color: _controller.listening ? Colors.green : Colors.grey,
+          // Status dot
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: _controller.listening
+                  ? NothingTheme.accent
+                  : NothingTheme.textDisabled,
+              shape: BoxShape.circle,
+            ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: NothingTheme.spaceSm),
+
+          // Status text
           Text(
-            _controller.listening ? 'Escuchando...' : 'En pausa',
+            _controller.listening ? 'ESCUCHANDO' : 'EN PAUSA',
             style: TextStyle(
-              color: _controller.listening ? Colors.green : Colors.grey,
-              fontSize: 13,
+              fontSize: NothingTheme.label,
+              letterSpacing: 0.88,
+              color: _controller.listening
+                  ? NothingTheme.textDisplay
+                  : NothingTheme.textSecondary,
             ),
           ),
         ],
@@ -105,23 +142,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildErrorMessage(String message) {
+  Widget _buildErrorMessage() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(NothingTheme.spaceMd),
       decoration: BoxDecoration(
-        color: Colors.red.withValues(alpha: 0.1),
+        border: Border.all(color: NothingTheme.accent, width: 1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, color: Colors.red, size: 20),
-          const SizedBox(width: 8),
-          Expanded(
+          const Text(
+            '[!]',
+            style: TextStyle(
+              fontSize: NothingTheme.body,
+              color: NothingTheme.accent,
+            ),
+          ),
+          const SizedBox(width: NothingTheme.spaceSm),
+          Flexible(
             child: Text(
-              message,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
+              _controller.errorMessage!,
+              style: const TextStyle(
+                fontSize: NothingTheme.caption,
+                color: NothingTheme.accent,
+              ),
             ),
           ),
         ],
@@ -129,50 +174,79 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildWelcomeOverlay(ThemeData theme) {
+  Widget _buildControlButton() {
+    if (_controller.loading) {
+      return const SizedBox(
+        width: 24,
+        height: 24,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          color: NothingTheme.textDisplay,
+        ),
+      );
+    }
+
+    return FilledButton(
+      onPressed: _controller.toggle,
+      style: FilledButton.styleFrom(
+        backgroundColor: _controller.listening
+            ? NothingTheme.accent
+            : NothingTheme.textDisplay,
+        foregroundColor: _controller.listening
+            ? NothingTheme.textDisplay
+            : NothingTheme.black,
+        minimumSize: const Size(160, 44),
+      ),
+      child: Text(
+        _controller.listening ? 'DETENER' : 'INICIAR',
+        style: const TextStyle(fontSize: 13, letterSpacing: 0.78),
+      ),
+    );
+  }
+
+  Widget _buildWelcomeOverlay() {
     return Positioned.fill(
       child: Container(
-        color: Colors.black.withValues(alpha: 0.7),
+        color: NothingTheme.black.withValues(alpha: 0.9),
         child: Center(
-          child: ScaleTransition(
-            scale: Tween(begin: 0.5, end: 1.0).animate(
-              CurvedAnimation(
-                parent: _welcomeAnimCtrl,
-                curve: Curves.elasticOut,
+          child: FadeTransition(
+            opacity: _welcomeAnimCtrl,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: NothingTheme.space2xl,
+                vertical: NothingTheme.spaceXl,
               ),
-            ),
-            child: FadeTransition(
-              opacity: _welcomeAnimCtrl,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 30,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      spreadRadius: 5,
+              margin: const EdgeInsets.symmetric(
+                horizontal: NothingTheme.spaceLg,
+              ),
+              decoration: BoxDecoration(
+                color: NothingTheme.surface,
+                border: Border.all(color: NothingTheme.borderVisible, width: 1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('👋', style: TextStyle(fontSize: 64)),
+                  const SizedBox(height: NothingTheme.spaceLg),
+                  const Text(
+                    '¡BIENVENIDO!',
+                    style: TextStyle(
+                      fontSize: NothingTheme.heading,
+                      letterSpacing: -0.24,
+                      color: NothingTheme.textDisplay,
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('👋', style: TextStyle(fontSize: 60)),
-                    const SizedBox(height: 16),
-                    Text(
-                      '¡Bienvenido Rodrigo!',
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                  ),
+                  const SizedBox(height: NothingTheme.spaceSm),
+                  const Text(
+                    'RODRIGO',
+                    style: TextStyle(
+                      fontSize: NothingTheme.label,
+                      letterSpacing: 0.88,
+                      color: NothingTheme.textSecondary,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -180,4 +254,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
   }
+}
+
+/// Dot grid background painter (Nothing motif)
+class DotGridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = NothingTheme.border
+      ..style = PaintingStyle.fill;
+
+    const spacing = 16.0;
+    const dotRadius = 0.5;
+
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), dotRadius, paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jueves/home/home_page.dart';
+import 'package:jueves/theme/nothing_theme.dart';
 
 void main() {
   runApp(const MainApp());
@@ -12,11 +13,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Detector de Aplausos',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      title: 'JUEVES',
+      theme: NothingTheme.darkTheme(),
       home: const HomePage(),
     );
   }
