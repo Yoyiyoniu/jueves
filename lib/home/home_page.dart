@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jueves/home/widget/background_widget.dart';
 import 'package:jueves/home/widget/error_widget.dart';
 import 'package:jueves/home/widget/welcome_modal.dart';
+import 'package:jueves/settings/settings_page.dart';
 import 'package:jueves/theme/nothing_theme.dart';
 import 'home_controller.dart';
 
@@ -161,55 +162,72 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildControlButton() {
-    return OutlinedButton(
-      onPressed: _controller.loading ? null : _controller.toggle,
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: _controller.listening
-              ? NothingTheme.interactive
-              : NothingTheme.borderVisible,
-          width: 1,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          onPressed: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const SettingsPage())),
+          icon: const Icon(Icons.settings_outlined),
+          color: NothingTheme.textSecondary,
+          iconSize: 18,
+          padding: const EdgeInsets.only(right: NothingTheme.spaceSm),
+          constraints: const BoxConstraints(),
+          tooltip: 'Configuración',
         ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: NothingTheme.spaceMd,
-          vertical: NothingTheme.spaceSm,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_controller.loading)
-            const SizedBox(
-              width: 12,
-              height: 12,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: NothingTheme.textDisplay,
-              ),
-            )
-          else
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: _controller.listening
-                    ? NothingTheme.interactive
-                    : NothingTheme.textDisabled,
-                shape: BoxShape.circle,
-              ),
-            ),
-          const SizedBox(width: NothingTheme.spaceSm),
-          Text(
-            'MODO LIBRE',
-            style: NothingTheme.spaceMonoLabel(
-              fontSize: NothingTheme.label,
+        const SizedBox(width: NothingTheme.spaceSm),
+        OutlinedButton(
+          onPressed: _controller.loading ? null : _controller.toggle,
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(
               color: _controller.listening
-                  ? NothingTheme.textDisplay
-                  : NothingTheme.textSecondary,
+                  ? NothingTheme.interactive
+                  : NothingTheme.borderVisible,
+              width: 1,
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: NothingTheme.spaceMd,
+              vertical: NothingTheme.spaceSm,
             ),
           ),
-        ],
-      ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (_controller.loading)
+                const SizedBox(
+                  width: 12,
+                  height: 12,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: NothingTheme.textDisplay,
+                  ),
+                )
+              else
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: _controller.listening
+                        ? NothingTheme.interactive
+                        : NothingTheme.textDisabled,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              const SizedBox(width: NothingTheme.spaceSm),
+              Text(
+                'MODO LIBRE',
+                style: NothingTheme.spaceMonoLabel(
+                  fontSize: NothingTheme.label,
+                  color: _controller.listening
+                      ? NothingTheme.textDisplay
+                      : NothingTheme.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

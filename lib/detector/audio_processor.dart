@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:record/record.dart';
 import 'package:jueves/detector/yamnet_http_classifier.dart';
+import 'package:jueves/settings/audio_settings.dart';
 
 class AudioProcessor {
   final AudioRecorder _recorder = AudioRecorder();
@@ -32,11 +33,16 @@ class AudioProcessor {
       );
     }
 
+    final deviceId = await AudioSettings.getInputDeviceId();
+
     final stream = await _recorder.startStream(
-      const RecordConfig(
+      RecordConfig(
         encoder: AudioEncoder.pcm16bits,
         numChannels: 1,
         sampleRate: 16000,
+        device: deviceId != null
+            ? InputDevice(id: deviceId, label: deviceId)
+            : null,
       ),
     );
 
