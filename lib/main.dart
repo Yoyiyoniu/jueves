@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jueves/home_page.dart';
+import 'package:jueves/home/home_page.dart';
 
 void main() {
   runApp(const MainApp());
