@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+/// Nothing Design System Theme
+/// Monochromatic, typographically driven, industrial design inspired
+///
+/// Fonts: Space Grotesk (body/UI), Space Mono (data/labels/display)
 class NothingTheme {
   // COLORS - Dark Mode (OLED Black)
   static const Color black = Color(0xFF000000);
@@ -54,63 +59,67 @@ class NothingTheme {
         error: error,
       ),
 
-      // Typography
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
+      // Typography - Space Grotesk for body/UI, Space Mono for labels/data/display
+      textTheme: TextTheme(
+        // Display sizes - Space Mono for technical/data display
+        displayLarge: GoogleFonts.spaceMono(
           fontSize: displayXl,
           height: 1.0,
           letterSpacing: -2.16,
           color: textDisplay,
           fontWeight: FontWeight.w400,
         ),
-        displayMedium: TextStyle(
+        displayMedium: GoogleFonts.spaceMono(
           fontSize: displayLg,
           height: 1.05,
           letterSpacing: -0.96,
           color: textDisplay,
           fontWeight: FontWeight.w400,
         ),
-        displaySmall: TextStyle(
+        displaySmall: GoogleFonts.spaceMono(
           fontSize: displayMd,
           height: 1.1,
           letterSpacing: -0.72,
           color: textDisplay,
           fontWeight: FontWeight.w400,
         ),
-        headlineMedium: TextStyle(
+        // Headings - Space Grotesk
+        headlineMedium: GoogleFonts.spaceGrotesk(
           fontSize: heading,
           height: 1.2,
           letterSpacing: -0.24,
           color: textDisplay,
           fontWeight: FontWeight.w400,
         ),
-        titleMedium: TextStyle(
+        titleMedium: GoogleFonts.spaceGrotesk(
           fontSize: subheading,
           height: 1.3,
           color: textPrimary,
           fontWeight: FontWeight.w400,
         ),
-        bodyLarge: TextStyle(
+        // Body - Space Grotesk
+        bodyLarge: GoogleFonts.spaceGrotesk(
           fontSize: body,
           height: 1.5,
           color: textPrimary,
           fontWeight: FontWeight.w400,
         ),
-        bodyMedium: TextStyle(
+        bodyMedium: GoogleFonts.spaceGrotesk(
           fontSize: bodySm,
           height: 1.5,
           letterSpacing: 0.14,
           color: textPrimary,
           fontWeight: FontWeight.w400,
         ),
-        bodySmall: TextStyle(
+        bodySmall: GoogleFonts.spaceGrotesk(
           fontSize: caption,
           height: 1.4,
           letterSpacing: 0.48,
           color: textSecondary,
           fontWeight: FontWeight.w400,
         ),
-        labelMedium: TextStyle(
+        // Labels - Space Mono (monospace for data/labels)
+        labelMedium: GoogleFonts.spaceMono(
           fontSize: label,
           height: 1.2,
           letterSpacing: 0.88,
@@ -119,11 +128,11 @@ class NothingTheme {
         ),
       ),
 
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: black,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: TextStyle(
+        titleTextStyle: GoogleFonts.spaceMono(
           fontSize: label,
           letterSpacing: 0.88,
           color: textSecondary,
@@ -149,7 +158,7 @@ class NothingTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(999),
           ),
-          textStyle: const TextStyle(
+          textStyle: GoogleFonts.spaceMono(
             fontSize: 13,
             letterSpacing: 0.78,
             fontWeight: FontWeight.w400,
@@ -166,7 +175,7 @@ class NothingTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(999),
           ),
-          textStyle: const TextStyle(
+          textStyle: GoogleFonts.spaceMono(
             fontSize: 13,
             letterSpacing: 0.78,
             fontWeight: FontWeight.w400,
@@ -189,7 +198,7 @@ class NothingTheme {
         errorBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: accent, width: 1),
         ),
-        labelStyle: const TextStyle(
+        labelStyle: GoogleFonts.spaceMono(
           fontSize: label,
           letterSpacing: 0.88,
           color: textSecondary,
@@ -201,6 +210,53 @@ class NothingTheme {
         thickness: 1,
         space: 1,
       ),
+    );
+  }
+
+  // Helper methods for specific font styles
+
+  /// Space Mono for technical/data display (replaces Doto)
+  static TextStyle spaceMonoDisplay({
+    double? fontSize,
+    Color? color,
+    FontWeight? fontWeight,
+    double? letterSpacing,
+  }) {
+    return GoogleFonts.spaceMono(
+      fontSize: fontSize ?? displayLg,
+      color: color ?? textDisplay,
+      fontWeight: fontWeight ?? FontWeight.w400,
+      letterSpacing: letterSpacing,
+    );
+  }
+
+  /// Space Grotesk for body/UI text
+  static TextStyle spaceGroteskBody({
+    double? fontSize,
+    Color? color,
+    FontWeight? fontWeight,
+    double? letterSpacing,
+  }) {
+    return GoogleFonts.spaceGrotesk(
+      fontSize: fontSize ?? body,
+      color: color ?? textPrimary,
+      fontWeight: fontWeight ?? FontWeight.w400,
+      letterSpacing: letterSpacing,
+    );
+  }
+
+  /// Space Mono for labels and data
+  static TextStyle spaceMonoLabel({
+    double? fontSize,
+    Color? color,
+    FontWeight? fontWeight,
+    double? letterSpacing,
+  }) {
+    return GoogleFonts.spaceMono(
+      fontSize: fontSize ?? label,
+      color: color ?? textSecondary,
+      fontWeight: fontWeight ?? FontWeight.w400,
+      letterSpacing: letterSpacing ?? 0.88,
     );
   }
 }
