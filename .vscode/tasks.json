@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "start-python-server",
+			"type": "shell",
+			"command": "bash",
+			"args": ["serve.sh"],
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": {
+					"regexp": "^$",
+					"file": 1,
+					"location": 2,
+					"message": 3
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": ".*",
+					"endsPattern": ".*Servidor YAMNet iniciado.*"
+				}
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		}
+	]
+}

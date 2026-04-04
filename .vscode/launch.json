@@ -1,0 +1,18 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Flutter + Python Server",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"preLaunchTask": "start-python-server"
+		},
+		{
+			"name": "Flutter Only",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart"
+		}
+	]
+}
