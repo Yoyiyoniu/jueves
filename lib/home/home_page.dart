@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jueves/home/widget/agenda/agenda_controller.dart';
+import 'package:jueves/home/widget/agenda/agenda_widget.dart';
 import 'package:jueves/home/widget/background_widget.dart';
 import 'package:jueves/home/widget/error_widget.dart';
 import 'package:jueves/home/widget/welcome_modal.dart';
@@ -15,12 +17,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late final HomeController _controller;
+  late final AgendaController _agendaController;
   late AnimationController _welcomeAnimCtrl;
 
   @override
   void initState() {
     super.initState();
     _controller = HomeController();
+    _agendaController = AgendaController();
     _welcomeAnimCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -39,6 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    _agendaController.dispose();
     _welcomeAnimCtrl.dispose();
     super.dispose();
   }
@@ -80,6 +85,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
+                Expanded(child: AgendaWidget(controller: _agendaController)),
               ],
             ),
           ),
