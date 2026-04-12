@@ -8,7 +8,7 @@ interpreter = tflite.Interpreter(model_path="assets/models/yamnet.tflite")
 interpreter.allocate_tensors()
 
 CLAP_CLASSES = [58, 62]
-THRESHOLD = 0.300
+THRESHOLD = 0.100
 
 @app.route('/classify', methods=['POST'])
 def classify():
@@ -25,11 +25,9 @@ def classify():
         interpreter.invoke()
         
         scores = interpreter.get_tensor(output_details[0]['index'])[0]
-        max_clap_score = max(scores[i] for i in CLAP_CLASSES)
         
         return jsonify({
-            'clap': bool(max_clap_score > THRESHOLD),
-            'confidence': float(max_clap_score)
+            'clap': bool(max_clap_score > THRESHOLD)
         })
     
     except Exception as e:
