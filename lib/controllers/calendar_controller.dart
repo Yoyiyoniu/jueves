@@ -40,7 +40,7 @@ class CalendarController {
       '--remote-debugging-port=9222',
     ], runInShell: true);
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 1500));
 
     var browser = await puppeteer.connect(browserUrl: 'http://localhost:9222');
     var myPage = await browser.newPage();
@@ -50,7 +50,10 @@ class CalendarController {
       wait: Until.domContentLoaded,
     );
 
-    await Future.delayed(Duration(seconds: 4));
+    await myPage.waitForSelector(
+      '[role="main"]',
+      timeout: Duration(seconds: 10),
+    );
 
     final rawEvents = await myPage.evaluate<List>('''() => {
       const chips = document.querySelectorAll('[data-eventchip]');
@@ -114,9 +117,6 @@ class CalendarController {
         .where((event) => event.time != null)
         .toList();
 
-    // ignore: avoid_print
-    print(jsonEncode(events.map((e) => e.toJson()).toList()));
-
     await browser.close();
 
     return events;
@@ -124,5 +124,7 @@ class CalendarController {
 }
 
 void main() async {
-  await CalendarController().getMothCalendar();
+  var calendar = await CalendarController().getMothCalendar();
+
+  print(jsonEncode(calendar.map((e) => e.toJson()).toList()));
 }
