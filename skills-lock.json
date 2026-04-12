@@ -5,6 +5,11 @@
       "source": "dominikmartn/nothing-design-skill",
       "sourceType": "github",
       "computedHash": "005ed742f5cb829f0fbe1ee959a91b3802e15ed1b521c774cc78483caf406a95"
+    },
+    "puppeteer-automation": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "computedHash": "d24300d65f0114bed5d9779feb4df06d458adb684ce5bbcdd1907ece7fc9f07e"
     }
   }
 }
