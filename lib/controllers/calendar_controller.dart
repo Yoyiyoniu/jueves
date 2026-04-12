@@ -2,32 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:puppeteer/puppeteer.dart';
 
-class CalendarEvent {
-  final String eventId;
-  final DateTime? time;
-  final String title;
-  final String fullDescription;
-  final bool isHomeWork; // have: Assignment: Google classroom Title
-  final String? url;
-
-  CalendarEvent({
-    required this.eventId,
-    this.time,
-    this.url,
-    required this.title,
-    required this.fullDescription,
-    required this.isHomeWork,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'eventId': eventId,
-    'time': time?.toIso8601String(),
-    'title': title,
-    'fullDescription': fullDescription,
-    'isHomeWork': isHomeWork,
-    'url': url,
-  };
-}
+import 'package:jueves/controllers/model.calendar_controller.dart';
 
 class CalendarController {
   static final _timeRegex = RegExp(
@@ -35,14 +10,14 @@ class CalendarController {
     caseSensitive: false,
   );
 
-  Future<List<CalendarEvent>> getMothCalendar() async {
+  Future<List<ModelCalendarEvent>> getMothCalendar() async {
     await Process.start('chromium', [
       '--remote-debugging-port=9222',
     ], runInShell: true);
 
     await Future.delayed(Duration(milliseconds: 1500));
 
-    var browser = await puppeteer.connect(browserUrl: 'http://localhost:9222');
+    var browser = await puppeteer.connect(browserUrl: 'http://localhost:7728');
     var myPage = await browser.newPage();
 
     await myPage.goto(
@@ -63,9 +38,9 @@ class CalendarController {
         const titleEl = chip.querySelector('span.WBi6vc');
         const descEl = chip.querySelector('span.XuJrye');
         
-        // Intenta obtener URL del evento si existe
-        const linkEl = chip.querySelector('a[href]');
-        const url = linkEl ? linkEl.href : null;
+        // Buscar URL del evento de múltiples formas
+        let url = null;
+        
         
         return {
           eventId,
@@ -105,7 +80,7 @@ class CalendarController {
             }
           }
 
-          return CalendarEvent(
+          return ModelCalendarEvent(
             eventId: map['eventId'] as String,
             time: parsedTime,
             url: map['url'] as String?,

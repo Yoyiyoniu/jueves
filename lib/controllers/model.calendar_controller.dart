@@ -1,4 +1,4 @@
-class CalendarEvent {
+class ModelCalendarEvent {
   final String eventId;
   final DateTime? time;
   final String title;
@@ -6,7 +6,7 @@ class CalendarEvent {
   final bool isHomeWork; // have: Assignment: Google classroom Title
   final String? url;
 
-  CalendarEvent({
+  ModelCalendarEvent({
     required this.eventId,
     this.time,
     this.url,
@@ -17,8 +17,10 @@ class CalendarEvent {
 
   Map<String, dynamic> toJson() => {
     'eventId': eventId,
-    'time': time,
+    'time': time?.toIso8601String(),
     'title': title,
     'fullDescription': fullDescription,
+    'isHomeWork': isHomeWork,
+    'url': url,
   };
 }
